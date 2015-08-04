@@ -1,11 +1,20 @@
 var five = require("johnny-five");
+var board;
+var servo;
 
-five.Board().on("ready", function(){
-  var flexSensor = new five.Sensor("A0");
-  var myServo = new five.Servo(9);
+board = new five.Board();
 
-  flexSensor.on("data", function(err, value){
-    var servoAngle = five.Fn.map(value, 50, 300, 0, 179);
-    myServo.move(servoAngle);
+board.on("ready", function() {
+
+  var flexSensor = new five.Sensor({
+    pin: "A0",
+  });
+
+  var servo = new five.Servo(9);
+
+  flexSensor
+  .on("change", function(value, error) {
+    console.log(this.value);
+    servo.to(this.value);
   });
 });
